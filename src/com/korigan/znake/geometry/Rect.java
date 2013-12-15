@@ -1,6 +1,6 @@
 package com.korigan.znake.geometry;
 
-import android.graphics.Point;
+import android.graphics.PointF;
 
 public class Rect extends Shape {
 	
@@ -13,7 +13,7 @@ public class Rect extends Shape {
 	}
 
 	@Override
-	public boolean contains(int x, int y, Point p) {
+	public boolean contains(int x, int y, PointF p) {
 		if(p.x >= x && p.x <= x+mWidth
 		&& p.y >= y && p.y<= y+mHeight)
 			return true;

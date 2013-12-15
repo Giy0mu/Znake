@@ -43,8 +43,8 @@ public class FieldLine implements GameObject{
 		mRockPaint.setColor(Color.GRAY);
 	}
 
-	public void move(float speed) {
-		mPosY += speed;
+	public void move(double d) {
+		mPosY += d;
 	}
 
 	@Override

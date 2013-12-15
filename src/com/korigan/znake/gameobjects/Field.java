@@ -7,7 +7,7 @@ import com.korigan.znake.GameEventListener;
 import com.korigan.znake.gameobjects.items.AppleItem;
 import com.korigan.znake.gameobjects.items.Item;
 import android.graphics.Canvas;
-import android.graphics.Point;
+import android.graphics.PointF;
 import android.os.SystemClock;
 
 public class Field implements GameObject{
@@ -40,11 +40,11 @@ public class Field implements GameObject{
 		}
 	}
 	
-	public void move(Snake snake) {
+	public void move(double elapsed, Snake snake) {
 		generateItem();
 		
 		for(FieldLine fl: mFieldLineQueue){
-			fl.move(snake.getSpeed());
+			fl.move(snake.getSpeed()*elapsed);
 		}
 		if(mFieldLineQueue.size()>0){
 			while(mFieldLineQueue.getFirst().isOut()){
@@ -55,7 +55,7 @@ public class Field implements GameObject{
 		}
 		
 		for(Item i: mItemQueue){
-			i.move(snake.getSpeed());
+			i.move(snake.getSpeed()*elapsed);
 		}
 		if(mItemQueue.size()>0){
 			while(mItemQueue.getFirst().isOut()){
@@ -77,7 +77,7 @@ public class Field implements GameObject{
 		
 	}
 	
-	public void checkCollisions(Point snakePoint, GameEventListener gameEvent){
+	public void checkCollisions(PointF snakePoint, GameEventListener gameEvent){
 		//Check collision with edge
 		if(snakePoint.x < 0 || snakePoint.x > GameSettings.getInstance().screen_width){
 			gameEvent.gameOver();

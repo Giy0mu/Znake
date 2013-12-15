@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.korigan.znake.GameEventListener;
@@ -16,7 +15,7 @@ import com.korigan.znake.gesture.SnakeGestureListener;
 
 public class GamePlayingPage extends AbstractGamePage implements GameEventListener, SnakeGestureListener{
 
-	private static final int PERIOD = 33;
+	private static final int PERIOD = 17;
 	private boolean mIsRunning;	
 	private Paint mScorePaint;
 	private int mScore;
@@ -50,16 +49,20 @@ public class GamePlayingPage extends AbstractGamePage implements GameEventListen
 	
 	public AbstractGamePage run(SurfaceView view){
 		long startTime, sleepTime;
+		long lastUpdate;
+		double elapsed;
 		mIsRunning = true;
 		mGestureDetector = new SnakeGestureDetector(this);
 		//Running
 		startTime = System.currentTimeMillis();
+		lastUpdate = startTime;
 		Canvas canvas = null;
 		
 		while(mIsRunning){
-				
 			executeInput();
-			scroll();
+			elapsed = (System.currentTimeMillis() - lastUpdate)/1000d;
+			updatePosition(elapsed);
+			lastUpdate = System.currentTimeMillis();
 			checkCollisions();
 			
 			if(mGameOver)
@@ -127,9 +130,9 @@ public class GamePlayingPage extends AbstractGamePage implements GameEventListen
 		mField.checkCollisions(mSnake.getHitbox(), this);
 	}
 	
-	private void scroll(){
-		mSnake.move();
-		mField.move(mSnake);
+	private void updatePosition(double elapsed){
+		mSnake.move(elapsed);
+		mField.move(elapsed, mSnake);
 	}
 
 	@Override

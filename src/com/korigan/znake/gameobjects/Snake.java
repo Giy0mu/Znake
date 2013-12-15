@@ -2,20 +2,20 @@ package com.korigan.znake.gameobjects;
 
 import java.util.LinkedList;
 
-import com.korigan.znake.GameSettings;
-import com.korigan.znake.gesture.SnakeGestureListener.SNAKE_ORIENTATION;
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
+import android.graphics.PointF;
+
+import com.korigan.znake.GameSettings;
+import com.korigan.znake.gesture.SnakeGestureListener.SNAKE_ORIENTATION;
 
 public class Snake implements GameObject{
 	
-	private final int MAX_DOT_NUMBER = 42;
+	private final int MAX_DOT_NUMBER = 25;
 	private final int ORIENTATION_MAX = 90;
 	private final float mOrientationSpeed;
-	private Point mHitbox;
+	private PointF mHitbox;
 	
 	private final Paint mOrientationPaint;
 	private final Paint mHitboxPaint;
@@ -25,7 +25,7 @@ public class Snake implements GameObject{
 	private float mSpeed;
 	
 	
-	private LinkedList<Point> mSnakePoints;
+	private LinkedList<PointF> mSnakePoints;
 	private float mOrientation;
 	
 	public Snake(){
@@ -42,8 +42,8 @@ public class Snake implements GameObject{
 		mHitboxPaint.setColor(Color.GREEN);
 		mHitboxPaint.setStrokeWidth(20f);
 		
-		mSpeed = 10f;
-		mSnakePoints = new LinkedList<Point>();
+		mSpeed = 200f;
+		mSnakePoints = new LinkedList<PointF>();
 	}
 	
 	public void incOrientation(SNAKE_ORIENTATION orientation){
@@ -92,19 +92,19 @@ public class Snake implements GameObject{
 	/**
 	 * Calculate the X position of the snake
 	 */
-	public void move(){
-		mPosX = (float) (mPosX-(1.5*mSpeed*Math.sin(mOrientation*(2*Math.PI)/360)));
-		for(Point p: mSnakePoints){
-			p.y += mSpeed;
+	public void move(double elapsed){
+		mPosX = (float) (mPosX-(1.5*mSpeed*elapsed*Math.sin(mOrientation*(2*Math.PI)/360)));
+		for(PointF p: mSnakePoints){
+			p.y += mSpeed*elapsed;
 		}
 	}
 	
 	public void draw(Canvas canvas){
 		drawOrientationLine(canvas);
-		mHitbox = new Point((int)mPosX, (int)mPosY);
+		mHitbox = new PointF((int)mPosX, (int)mPosY);
 		canvas.drawPoint(mHitbox.x, mHitbox.y, mHitboxPaint);
 		
-		for(Point p : mSnakePoints){
+		for(PointF p : mSnakePoints){
 			canvas.drawPoint(p.x, p.y, mHitboxPaint);
 		}
 		
@@ -120,7 +120,7 @@ public class Snake implements GameObject{
 		canvas.drawLine(mPosX, mPosY, (float)(mPosX-tongueLength*Math.sin(mOrientation*(2*Math.PI)/360)), (float)(mPosY-tongueLength*Math.cos(mOrientation*(2*Math.PI)/360)), mOrientationPaint);
 	}
 	
-	public Point getHitbox(){
-		return new Point((int)mPosX, (int)mPosY);
+	public PointF getHitbox(){
+		return new PointF((int)mPosX, (int)mPosY);
 	}
 }

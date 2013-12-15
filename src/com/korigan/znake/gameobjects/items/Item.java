@@ -1,12 +1,12 @@
 package com.korigan.znake.gameobjects.items;
 
-import com.korigan.znake.GameSettings;
+import android.graphics.PointF;
+
 import com.korigan.znake.GameEventListener;
+import com.korigan.znake.GameSettings;
 import com.korigan.znake.gameobjects.Field;
 import com.korigan.znake.gameobjects.GameObject;
 import com.korigan.znake.geometry.Shape;
-
-import android.graphics.Point;
 
 abstract public class Item implements GameObject{
 	
@@ -22,15 +22,15 @@ abstract public class Item implements GameObject{
 		mShape = shape;
 	}
 	
-	public void move(float speed){
-		mPosY += speed;
+	public void move(double d){
+		mPosY += d;
 	}
 	
 	public boolean isOut(){
 		return mPosY >= GameSettings.getInstance().screen_height;
 	}
 	
-	public boolean collide(Point p){
+	public boolean collide(PointF p){
 		return mShape.contains(mPosX, mPosY, p);
 	}
 	
