@@ -23,7 +23,7 @@ public class Field implements GameObject{
 		
 		int startY = (int) (-2*(GameSettings.getInstance().screen_height/10f));
 		int heightLine = (int) (GameSettings.getInstance().screen_height/10f);
-		for(int i=0; i<12;i++){
+		for(int i=0; i<11;i++){
 			mFieldLineQueue.add(new FieldLine(startY));
 			mFieldLineQueue.getLast().move((12-i)*heightLine);
 		}
@@ -49,6 +49,7 @@ public class Field implements GameObject{
 		if(mFieldLineQueue.size()>0){
 			while(mFieldLineQueue.getFirst().isOut()){
 				mFieldLineQueue.removeFirst();
+				//Generate field line when the last field line is out of the screen
 				mFieldLineQueue.add(mFieldLineQueue.getLast().generateFieldLine(snake));
 				
 			}

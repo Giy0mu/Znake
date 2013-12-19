@@ -1,16 +1,12 @@
 package com.korigan.znake;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
-
 import com.korigan.znake.pages.AbstractGamePage;
 import com.korigan.znake.pages.GameMainMenuPage;
 
@@ -26,6 +22,7 @@ public class DrawView extends SurfaceView implements Runnable{
 	Thread mThread = null;
 	SurfaceHolder mHolder;
 	boolean mRunning = false;
+	boolean mInit = false;
 	boolean mSurfaceReady = false;
 	
 	private AbstractGamePage mGamePage;
@@ -53,18 +50,18 @@ public class DrawView extends SurfaceView implements Runnable{
 			
 			@Override
 			public void surfaceCreated(SurfaceHolder holder) {
-				initGameSettings();
-				mGamePage = new GameMainMenuPage(mContext);
+				if(!mInit){
+					initGameSettings();
+					mGamePage = new GameMainMenuPage(mContext);
+				}
 				mSurfaceReady = true;
 				start();
-				
 			}
 			
 			@Override
 			public void surfaceChanged(SurfaceHolder holder, int format, int width,
 					int height) {
 				Log.e("DrawView", "Surface Changed!");
-				
 			}
 		});
 		
@@ -85,7 +82,9 @@ public class DrawView extends SurfaceView implements Runnable{
 	@Override
 	public void run() {
 		while(mRunning){
+				
 			if(mSurfaceReady){
+				mGamePage.init();
 				mGamePage = mGamePage.run(this);
 			}
 			else{
@@ -103,31 +102,21 @@ public class DrawView extends SurfaceView implements Runnable{
 		GameSettings.getInstance().screen_width = getWidth();
 	}
 	
-	private void startGame(){
-		
-	}
-	
 	public void pause(){
 		mGamePage.pause();
-//		mRunning = false;
-//	    while(true){
-//	        try{
-//	        	mThread.join();
-//	        }catch(InterruptedException e){
-//	        	e.printStackTrace();
-//	        }
-//	        break;
-//        }
-//	    mThread = null;
+		mRunning = false;
     }
 
 	public void resume(){
-//		mGamePage.resume();
-		
+		if(mInit){
+			mGamePage.resume();
+			mRunning = true;
+		}
 	}
 	
 	public void start(){
 		mRunning = true;
+		mInit = true;
 		mThread = new Thread(this);
 		mThread.start();
 	}

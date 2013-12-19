@@ -24,11 +24,21 @@ public class GameMainMenuPage extends AbstractGamePage implements MenuGestureLis
 	}
 
 	@Override
+	public void init() {
+		mIsRunning = true;
+		mGestureDetector = new MenuGestureDetector(this);
+	}
+	
+	@Override
 	public AbstractGamePage run(SurfaceView view) {
 		long startTime, sleepTime;
-		mGestureDetector = new MenuGestureDetector(this);
+		
 		startTime = System.currentTimeMillis();
 		while(!mClicked){
+			
+			if(!mIsRunning){
+				return this;
+			}
 			
 			if(view.getHolder().getSurface().isValid()){
 			    Canvas canvas = view.getHolder().lockCanvas();
@@ -41,11 +51,6 @@ public class GameMainMenuPage extends AbstractGamePage implements MenuGestureLis
 				view.getHolder().unlockCanvasAndPost(canvas);
 			}
 			
-//			try {
-//				Thread.sleep(100);
-//			} catch (InterruptedException e) { 
-//				e.printStackTrace();
-//			}
 			//This block causes the 'shaking' problem, although it isnt directly related to a negative sleepTime
 			sleepTime = (int) (PERIOD - (System.currentTimeMillis() - startTime));
 			Log.e("GameMainMenuPage", "Sleep time: "+sleepTime);
@@ -74,17 +79,7 @@ public class GameMainMenuPage extends AbstractGamePage implements MenuGestureLis
 		mClicked = true;
 	}
 
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 
 }

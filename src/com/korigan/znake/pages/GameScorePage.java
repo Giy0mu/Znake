@@ -26,8 +26,14 @@ public class GameScorePage extends AbstractGamePage implements MenuGestureListen
 	}
 
 	@Override
-	public AbstractGamePage run(SurfaceView view) {
+	public void init() {
+		mIsRunning = true;
 		mGestureDetector = new MenuGestureDetector(this);
+	}
+	
+	@Override
+	public AbstractGamePage run(SurfaceView view) {
+		
 		
 		boolean newBestScore = false;
 		
@@ -37,25 +43,31 @@ public class GameScorePage extends AbstractGamePage implements MenuGestureListen
 		}
 		while(!mClicked){
 			
-			if(view.getHolder().getSurface().isValid()){
-			    Canvas canvas = view.getHolder().lockCanvas();
-			    
-			    //Background Color
-				canvas.drawColor(Color.YELLOW);
-				
-				if(newBestScore){
-					canvas.drawText("New record!\nYour score: "+mFinalScore, 100, 100, mTextPaint);
-				}
-				else{
-					canvas.drawText("Your score: "+mFinalScore, 100, 100, mTextPaint);
-				}
-				view.getHolder().unlockCanvasAndPost(canvas);
-			}
+			if(mIsRunning){
 			
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) { 
-				e.printStackTrace();
+				if(view.getHolder().getSurface().isValid()){
+				    Canvas canvas = view.getHolder().lockCanvas();
+				    
+				    //Background Color
+					canvas.drawColor(Color.YELLOW);
+					
+					if(newBestScore){
+						canvas.drawText("New record!\nYour score: "+mFinalScore, 100, 100, mTextPaint);
+					}
+					else{
+						canvas.drawText("Your score: "+mFinalScore, 100, 100, mTextPaint);
+					}
+					view.getHolder().unlockCanvasAndPost(canvas);
+				}
+				
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) { 
+					e.printStackTrace();
+				}
+			}
+			else{
+				return this;
 			}
 		}
 		return new GameMainMenuPage(mContext);
@@ -64,18 +76,6 @@ public class GameScorePage extends AbstractGamePage implements MenuGestureListen
 	@Override
 	public void onClick(float x, float y) {
 		mClicked = true;
-	}
-
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

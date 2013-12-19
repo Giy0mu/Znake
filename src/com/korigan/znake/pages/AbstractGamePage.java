@@ -9,6 +9,7 @@ import com.korigan.znake.gesture.AbstractGestureDetector;
 abstract public class AbstractGamePage {
 	protected Context mContext;
 	protected AbstractGestureDetector mGestureDetector;
+	protected boolean mIsRunning;	
 	
 	public AbstractGamePage(Context context){
 		mContext = context;
@@ -18,9 +19,14 @@ abstract public class AbstractGamePage {
 		return mGestureDetector.onTouchEvent(event);
 	}
 	
+	public abstract void init();
 	public abstract AbstractGamePage run(SurfaceView view);
 	
-	public abstract void pause();
-	public abstract void resume();
+	public void pause(){
+		mIsRunning = false;
+	}
+	public void resume(){
+		mIsRunning = true;
+	}
 
 }

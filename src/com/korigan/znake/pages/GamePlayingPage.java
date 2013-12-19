@@ -16,7 +16,6 @@ import com.korigan.znake.gesture.SnakeGestureListener;
 public class GamePlayingPage extends AbstractGamePage implements GameEventListener, SnakeGestureListener{
 
 	private static final int PERIOD = 17;
-	private boolean mIsRunning;	
 	private Paint mScorePaint;
 	private int mScore;
 	
@@ -33,10 +32,6 @@ public class GamePlayingPage extends AbstractGamePage implements GameEventListen
 	
 	public GamePlayingPage(Context context){
 		super(context);
-		init();
-	}
-	
-	private void init(){
 		mScore = 0;
 		mScorePaint = new Paint();
 		mScorePaint.setColor(Color.BLACK);
@@ -47,12 +42,18 @@ public class GamePlayingPage extends AbstractGamePage implements GameEventListen
 		mField = new Field();
 	}
 	
+	@Override
+	public void init(){
+		mIsRunning = true;
+		mGestureDetector = new SnakeGestureDetector(this);
+	}
+	
 	public AbstractGamePage run(SurfaceView view){
+		AbstractGamePage returnPage = this;
 		long startTime, sleepTime;
 		long lastUpdate;
 		double elapsed;
-		mIsRunning = true;
-		mGestureDetector = new SnakeGestureDetector(this);
+		
 		//Running
 		startTime = System.currentTimeMillis();
 		lastUpdate = startTime;
@@ -65,8 +66,11 @@ public class GamePlayingPage extends AbstractGamePage implements GameEventListen
 			lastUpdate = System.currentTimeMillis();
 			checkCollisions();
 			
-			if(mGameOver)
+			if(mGameOver){
+				returnPage = new GameScorePage(mContext, mScore);
 				break;
+			}
+			
 			if(view.getHolder().getSurface().isValid()){
 	        	try{
 				    canvas = view.getHolder().lockCanvas();
@@ -111,7 +115,7 @@ public class GamePlayingPage extends AbstractGamePage implements GameEventListen
 			}
 			startTime = System.currentTimeMillis();
 		}
-		return new GameScorePage(mContext, mScore);
+		return returnPage;
 	}
 	
 	private void executeInput(){
@@ -155,18 +159,6 @@ public class GamePlayingPage extends AbstractGamePage implements GameEventListen
 	@Override
 	public void scoreBonus(int bonus) {
 		mScore += bonus;
-		
-	}
-
-	@Override
-	public void pause() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void resume() {
-		// TODO Auto-generated method stub
 		
 	}
 }
